@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2>🎵 อัปโหลดไฟล์เสียงเพื่อแยกเสียง</h2>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.original_file.label_tag }}<br>
+    {{ form.original_file }}
+    <br><br>
+    <button type="submit" class="btn btn-primary">อัปโหลด & แยกเสียง</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+# === Python cache ===
+__pycache__/
+*.py[cod]
+*$py.class
+
+# === Virtual environment ===
+venv/
+env/
+myvenv/
+.spleeter-env/
+spleeter-env/
+
+# === Django specific ===
+*.log
+*.pot
+*.pyc
+*.db
+db.sqlite3
+local_settings.py
+
+# === Media / Uploaded files ===
+media/
+uploads/
+*.mp3
+*.wav
+
+# === Static files (generated) ===
+staticfiles/
+static_root/
+.collectstatic/
+
+# === Environment / Secrets ===
+.env
+*.env
+.secret_key
+
+# === IDE / Editor ===
+.vscode/
+.idea/
+*.swp
+
+# === OS junk files ===
+.DS_Store
+Thumbs.db
+
+# === Compiled assets ===
+*.min.js
+*.min.css
+
+# === Backup / temporary ===
+*.bak
+*.tmp

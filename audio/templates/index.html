@@ -1,0 +1,332 @@
+{% load static %}
+<!doctype html>
+<html lang="th">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Welcome | Sound Remover</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{% static 'style/index.css' %}">
+</head>
+<style>
+  /* From Uiverse.io by StealthWorm */
+  .btn-space {
+    all: unset;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 13rem;
+    overflow: hidden !important;
+    height: 3rem !important;
+    background-size: 300% 300% !important;
+    cursor: pointer !important;
+    backdrop-filter: blur(1rem) !important;
+    border-radius: 5rem !important;
+    transition: 0.5s !important;
+    animation: gradient_301 5s ease infinite !important;
+    border: double 4px transparent !important;
+    background-image: linear-gradient(#212121, #212121),
+      linear-gradient(137.48deg,
+        #ffdb3b 10%,
+        #fe53bb 45%,
+        #8f51ea 67%,
+        #0044ff 87%) !important;
+    background-origin: border-box !important;
+    background-clip: content-box, border-box !important;
+  }
+
+  #container-stars {
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    transition: 0.5s;
+    backdrop-filter: blur(1rem);
+    border-radius: 5rem;
+  }
+
+  strong {
+    z-index: 2;
+    font-family: "Avalors Personal Use";
+    font-size: 18px;
+    letter-spacing: 5px;
+    color: #ffffff;
+    text-shadow: 0 0 4px white;
+  }
+
+  #glow {
+    position: absolute;
+    display: flex;
+    width: 12rem;
+  }
+
+  .circle {
+    width: 100%;
+    height: 30px;
+    filter: blur(2rem);
+    animation: pulse_3011 4s infinite;
+    z-index: -1;
+  }
+
+  .circle:nth-of-type(1) {
+    background: rgba(254, 83, 186, 0.636);
+  }
+
+  .circle:nth-of-type(2) {
+    background: rgba(142, 81, 234, 0.704);
+  }
+
+  .btn-space:hover #container-stars {
+    z-index: 1;
+    background-color: #212121;
+  }
+
+  .btn-space:hover {
+    transform: scale(1.1);
+  }
+
+  .btn-space:active {
+    border: double 4px #fe53bb;
+    background-origin: border-box;
+    background-clip: content-box, border-box;
+    animation: none;
+  }
+
+  .btn-space:active .circle {
+    background: #fe53bb;
+  }
+
+  #stars {
+    position: relative;
+    background: transparent;
+    width: 200rem;
+    height: 200rem;
+  }
+
+  #stars::after {
+    content: "";
+    position: absolute;
+    top: -10rem;
+    left: -100rem;
+    width: 100%;
+    height: 100%;
+    animation: animStarRotate 90s linear infinite;
+  }
+
+  #stars::after {
+    background-image: radial-gradient(#ffffff 1px, transparent 1%);
+    background-size: 50px 50px;
+  }
+
+  #stars::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 170%;
+    height: 500%;
+    animation: animStar 60s linear infinite;
+  }
+
+  #stars::before {
+    background-image: radial-gradient(#ffffff 1px, transparent 1%);
+    background-size: 50px 50px;
+    opacity: 0.5;
+  }
+
+  @keyframes animStar {
+    from {
+      transform: translateY(0);
+    }
+
+    to {
+      transform: translateY(-135rem);
+    }
+  }
+
+  @keyframes animStarRotate {
+    from {
+      transform: rotate(360deg);
+    }
+
+    to {
+      transform: rotate(0);
+    }
+  }
+
+  @keyframes gradient_301 {
+    0% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  @keyframes pulse_3011 {
+    0% {
+      transform: scale(0.75);
+      box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+    }
+
+    70% {
+      transform: scale(1);
+      box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+    }
+
+    100% {
+      transform: scale(0.75);
+      box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+    }
+  }
+</style>
+
+<body class="d-flex flex-column min-vh-100">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-lofi py-3">
+    <div class="container">
+      <a class="navbar-brand text-white fw-bold" href="#">Sound Remover</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <main class="flex-grow-1 d-flex align-items-center">
+    <div class="container text-center">
+      <h1 class="display-4 fw-bold">🎶 Welcome to Sound Remover</h1>
+      <p class="lead muted">ระบบแยกเสียงร้องและดนตรีออกจากไฟล์เสียงของคุณได้อย่างง่ายดาย</p>
+      <div class="mt-4 d-flex justify-content-center gap-3">
+        <!-- ปุ่ม Sign In / Sign Up -->
+         <button type="button" class="btn-space" data-bs-toggle="modal" data-bs-target="#authModal"
+          onclick="openTab('register')">
+          <strong>Sign In</strong>
+          <div id="container-stars">
+            <div id="stars"></div>
+          </div>
+
+          <div id="glow">
+            <div class="circle"></div>
+            <div class="circle"></div>
+          </div>
+        </button>
+        <button class="btn btn-outline-light btn-lg" data-bs-toggle="modal" data-bs-target="#authModal"
+          onclick="openTab('register')">Sign Up</button>
+        
+
+      </div>
+    </div>
+  </main>
+  <!-- <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@kpearsss/video/7548790416578039047" data-video-id="7548790416578039047" style="max-width: 605px;min-width: 325px;" > <section> <a target="_blank" title="@kpearsss" href="https://www.tiktok.com/@kpearsss?refer=embed">@kpearsss</a> <p>มาช้าแต่มาชัวร์ </p> <a target="_blank" title="♬ เสียงต้นฉบับ - DJ KING DRAGON 🚀🚀 - DJ KING DRAGON 🚀🚀2004" href="https://www.tiktok.com/music/เสียงต้นฉบับ-DJ-KING-DRAGON-🚀🚀-7503431308207459089?refer=embed">♬ เสียงต้นฉบับ - DJ KING DRAGON 🚀🚀 - DJ KING DRAGON 🚀🚀2004</a> </section> </blockquote> <script async src="https://www.tiktok.com/embed.js"></script> -->
+  <!-- Footer -->
+  <footer class="text-center muted small py-3">
+    © 2025 Sound Remover — Project Serverside of KMITL@IT 66070120
+  </footer>
+  <!-- Auth Modal (Tabbed Login / Register) -->
+  <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+      <div class="modal-content bg-dark text-white rounded-4 shadow-lg">
+        <!-- Tabs Header -->
+        <div class="modal-header border-0">
+          <ul class="nav nav-tabs w-100" id="authTabs" role="tablist">
+            <li class="nav-item w-50" role="presentation">
+              <button class="nav-link active w-100 " id="login-tab" data-bs-toggle="tab"
+                data-bs-target="#loginTab" type="button" role="tab" aria-controls="loginTab" aria-selected="true">
+                Sign In
+              </button>
+            </li>
+            <li class="nav-item w-50" role="presentation">
+              <button class="nav-link w-100" id="register-tab" data-bs-toggle="tab"
+                data-bs-target="#registerTab" type="button" role="tab" aria-controls="registerTab"
+                aria-selected="false">
+                Sign Up
+              </button>
+            </li>
+          </ul>
+          <button type="button" class="btn-close btn-close-white position-absolute end-0 me-3" data-bs-dismiss="modal"
+            aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="tab-content" id="authTabsContent">
+            <!-- Login Tab -->
+            <div class="tab-pane fade show active" id="loginTab" role="tabpanel" aria-labelledby="login-tab">
+              <form action="/login" method="POST" id="loginForm">
+                <div class="mb-3 text-start">
+                  <label class="form-label">Username</label>
+                  <input type="text" class="form-control rounded-3" name="username" placeholder="Your username"
+                    required>
+                </div>
+                <div class="mb-3 text-start">
+                  <label class="form-label">Password</label>
+                  <input type="password" class="form-control rounded-3" name="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn cta-btn w-100 rounded-3 text-black">Sign In</button>
+              </form>
+            </div>
+
+            <!-- Register Tab -->
+            <div class="tab-pane fade" id="registerTab" role="tabpanel" aria-labelledby="register-tab">
+              <form action="/register" method="POST" id="registerForm">
+                <div class="row">
+                  <div class="col-md-6 mb-3 text-start">
+                    <label class="form-label">First Name</label>
+                    <input type="text" class="form-control rounded-3" name="firstName" placeholder="Firstname" required>
+                  </div>
+                  <div class="col-md-6 mb-3 text-start">
+                    <label class="form-label">Last Name</label>
+                    <input type="text" class="form-control rounded-3" name="lastName" placeholder="Lastname" required>
+                  </div>
+                </div>
+                <div class="mb-3 text-start">
+                  <label class="form-label">Telephone</label>
+                  <input type="text" class="form-control rounded-3" name="telephone" placeholder="Your phone" required>
+                </div>
+                <div class="mb-3 text-start">
+                  <label class="form-label">Username</label>
+                  <input type="text" class="form-control rounded-3" name="username" placeholder="Your username"
+                    required>
+                </div>
+                <div class="mb-3 text-start">
+                  <label class="form-label">Email</label>
+                  <input type="email" class="form-control rounded-3" name="email" placeholder="you@example.com"
+                    required>
+                </div>
+                <div class="mb-3 text-start">
+                  <label class="form-label">Password</label>
+                  <input type="password" class="form-control rounded-3" name="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn cta-btn w-100 rounded-3 text-black">Sign Up</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer border-0 text-center">
+          <small class="text-muted w-100">© 2025 Sound Remover</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+  </div>
+
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="{% static 'js/index.js' %}"></script>
+</body>
+
+</html>
