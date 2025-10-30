@@ -1,0 +1,64 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="
+      {% if user.is_authenticated %}
+        {% if user.is_staff %}
+          {% url 'admin_dashboard' %}
+        {% else %}
+          {% url 'dashboard' %}
+        {% endif %}
+      {% else %}
+        {% url 'index' %}
+      {% endif %}">🎵 Sound Remover</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarMenu">
+      <ul class="navbar-nav ms-auto">
+        {% if user.is_authenticated %}
+        {% if user.is_staff %}
+        <!-- สำหรับ Admin -->
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'admin_dashboard' %}">Payment</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'view_all_tags' %}">Tag</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'viewUser' %}">User Profile</a>
+        </li>
+        {% else %}
+        <!-- สำหรับ User -->
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'upload_audio' %}">Upload Audio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'ticket_dashboard' %}">Ticket</a>
+        </li>
+        {% endif %}
+        <li class="nav-item d-flex align-items-center text-light ms-3">
+          {{ user.username }}
+        </li>
+        <li class="nav-item">
+          <form action="{% url 'logout' %}" method="get" class="d-inline">
+            <button type="submit" class="btn btn-link nav-link text-danger">Logout</button>
+          </form>
+        </li>
+
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'index' %}#login">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'index' %}#register">Register</a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

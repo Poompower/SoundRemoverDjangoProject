@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block title %}Change Tag | Sound Remover{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="fw-bold mb-3">✏️ แก้ไขแท็ก</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="name" class="form-label">ชื่อแท็กใหม่</label>
+      <input type="text" name="name" id="name" class="form-control" value="{{ tag.name }}" required>
+    </div>
+    <button type="submit" class="btn btn-success">💾 บันทึกการแก้ไข</button>
+    <a href="{% url 'view_all_tags' %}" class="btn btn-secondary">⬅ กลับ</a>
+  </form>
+</div>
+{% endblock %}

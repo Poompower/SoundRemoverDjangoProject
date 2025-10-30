@@ -13,4 +13,6 @@ document.addEventListener("DOMContentLoaded", () => {
       ctaButton.classList.remove("animate__animated", "animate__pulse");
     });
   }
+  
 });
+

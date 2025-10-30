@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "layout.html" %}
 
 {% block content %}
 <div class="container mt-4">
@@ -6,8 +6,14 @@
 
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.original_file.label_tag }}<br>
-    {{ form.original_file }}
+    <div class="mb-3">
+      {{ form.original_file.label_tag }}
+      {{ form.original_file }}
+      
+      {% for error in form.original_file.errors %}
+        <span class="text-danger small d-block mt-1">{{ error }}</span>
+      {% endfor %}
+    </div>
     <br><br>
     <button type="submit" class="btn btn-primary">อัปโหลด & แยกเสียง</button>
   </form>

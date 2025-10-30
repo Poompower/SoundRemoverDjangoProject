@@ -198,7 +198,17 @@
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-lofi py-3">
     <div class="container">
-      <a class="navbar-brand text-white fw-bold" href="#">Sound Remover</a>
+      <a class="navbar-brand text-white fw-bold" href="
+      {% if user.is_authenticated %}
+      {% if user.is_staff %}
+        {% url 'admin_dashboard' %}
+      {% else %}
+        {% url 'dashboard' %}
+      {% endif %}
+    {% else %}
+      {% url 'index' %}
+    {% endif %}
+      ">Sound Remover</a>
     </div>
   </nav>
 
@@ -209,9 +219,9 @@
       <p class="lead muted">ระบบแยกเสียงร้องและดนตรีออกจากไฟล์เสียงของคุณได้อย่างง่ายดาย</p>
       <div class="mt-4 d-flex justify-content-center gap-3">
         <!-- ปุ่ม Sign In / Sign Up -->
-         <button type="button" class="btn-space" data-bs-toggle="modal" data-bs-target="#authModal"
-          onclick="openTab('register')">
-          <strong>Sign In</strong>
+        <button type="button" class="btn-space" data-bs-toggle="modal" data-bs-target="#authModal"
+          onclick="openTab('login')">
+          <strong>Sign In/Sign Up</strong>
           <div id="container-stars">
             <div id="stars"></div>
           </div>
@@ -221,9 +231,7 @@
             <div class="circle"></div>
           </div>
         </button>
-        <button class="btn btn-outline-light btn-lg" data-bs-toggle="modal" data-bs-target="#authModal"
-          onclick="openTab('register')">Sign Up</button>
-        
+
 
       </div>
     </div>
@@ -237,90 +245,131 @@
   <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-md">
       <div class="modal-content bg-dark text-white rounded-4 shadow-lg">
+
         <!-- Tabs Header -->
         <div class="modal-header border-0">
           <ul class="nav nav-tabs w-100" id="authTabs" role="tablist">
             <li class="nav-item w-50" role="presentation">
-              <button class="nav-link active w-100 " id="login-tab" data-bs-toggle="tab"
-                data-bs-target="#loginTab" type="button" role="tab" aria-controls="loginTab" aria-selected="true">
+              <button class="nav-link {% if not register_form.errors %}active{% endif %} w-100" id="login-tab"
+                data-bs-toggle="tab" data-bs-target="#loginTab" type="button" role="tab" aria-controls="loginTab"
+                aria-selected="{% if not register_form.errors %}true{% else %}false{% endif %}">
                 Sign In
               </button>
             </li>
             <li class="nav-item w-50" role="presentation">
-              <button class="nav-link w-100" id="register-tab" data-bs-toggle="tab"
-                data-bs-target="#registerTab" type="button" role="tab" aria-controls="registerTab"
-                aria-selected="false">
+              <button class="nav-link {% if register_form.errors %}active{% endif %} w-100" id="register-tab"
+                data-bs-toggle="tab" data-bs-target="#registerTab" type="button" role="tab" aria-controls="registerTab"
+                aria-selected="{% if register_form.errors %}true{% else %}false{% endif %}">
                 Sign Up
               </button>
             </li>
           </ul>
+
           <button type="button" class="btn-close btn-close-white position-absolute end-0 me-3" data-bs-dismiss="modal"
-            aria-label="Close"></button>
+            aria-label="Close">
+          </button>
         </div>
 
+        <!-- Modal Body -->
         <div class="modal-body">
           <div class="tab-content" id="authTabsContent">
+
             <!-- Login Tab -->
-            <div class="tab-pane fade show active" id="loginTab" role="tabpanel" aria-labelledby="login-tab">
-              <form action="/login" method="POST" id="loginForm">
+            <div class="tab-pane fade {% if not register_form.errors %}show active{% endif %}" id="loginTab"
+              role="tabpanel">
+              <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                {% if login_form.non_field_errors %}
+                <div class="alert alert-danger text-start small rounded-3">
+                  {% for error in login_form.non_field_errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+
                 <div class="mb-3 text-start">
-                  <label class="form-label">Username</label>
-                  <input type="text" class="form-control rounded-3" name="username" placeholder="Your username"
-                    required>
+                  {{ login_form.username.label_tag }}
+                  {{ login_form.username }}
                 </div>
                 <div class="mb-3 text-start">
-                  <label class="form-label">Password</label>
-                  <input type="password" class="form-control rounded-3" name="password" placeholder="••••••••" required>
+                  {{ login_form.password.label_tag }}
+                  {{ login_form.password }}
                 </div>
                 <button type="submit" class="btn cta-btn w-100 rounded-3 text-black">Sign In</button>
               </form>
+
             </div>
 
             <!-- Register Tab -->
-            <div class="tab-pane fade" id="registerTab" role="tabpanel" aria-labelledby="register-tab">
-              <form action="/register" method="POST" id="registerForm">
+            <div class="tab-pane fade {% if register_form.errors %}show active{% endif %}" id="registerTab"
+              role="tabpanel">
+              <form method="post" action="{% url 'register' %}">
+                {% csrf_token %}
+                {{ register_form.non_field_errors }}
+
                 <div class="row">
                   <div class="col-md-6 mb-3 text-start">
-                    <label class="form-label">First Name</label>
-                    <input type="text" class="form-control rounded-3" name="firstName" placeholder="Firstname" required>
+                    {{ register_form.first_name.label_tag }}
+                    {{ register_form.first_name }}
+                    {% for error in register_form.first_name.errors %}
+                    <span class="text-danger small">{{ error }}</span>
+                    {% endfor %}
                   </div>
                   <div class="col-md-6 mb-3 text-start">
-                    <label class="form-label">Last Name</label>
-                    <input type="text" class="form-control rounded-3" name="lastName" placeholder="Lastname" required>
+                    {{ register_form.last_name.label_tag }}
+                    {{ register_form.last_name }}
+                    {% for error in register_form.last_name.errors %}
+                    <span class="text-danger small">{{ error }}</span>
+                    {% endfor %}
                   </div>
                 </div>
+
                 <div class="mb-3 text-start">
-                  <label class="form-label">Telephone</label>
-                  <input type="text" class="form-control rounded-3" name="telephone" placeholder="Your phone" required>
+                  {{ register_form.email.label_tag }}
+                  {{ register_form.email }}
+                  {% for error in register_form.email.errors %}
+                  <span class="text-danger small">{{ error }}</span>
+                  {% endfor %}
                 </div>
+
                 <div class="mb-3 text-start">
-                  <label class="form-label">Username</label>
-                  <input type="text" class="form-control rounded-3" name="username" placeholder="Your username"
-                    required>
+                  {{ register_form.username.label_tag }}
+                  {{ register_form.username }}
+                  {% for error in register_form.username.errors %}
+                  <span class="text-danger small">{{ error }}</span>
+                  {% endfor %}
                 </div>
+
                 <div class="mb-3 text-start">
-                  <label class="form-label">Email</label>
-                  <input type="email" class="form-control rounded-3" name="email" placeholder="you@example.com"
-                    required>
+                  {{ register_form.password1.label_tag }}
+                  {{ register_form.password1 }}
+                  {% for error in register_form.password1.errors %}
+                  <span class="text-danger small">{{ error }}</span>
+                  {% endfor %}
                 </div>
+
                 <div class="mb-3 text-start">
-                  <label class="form-label">Password</label>
-                  <input type="password" class="form-control rounded-3" name="password" placeholder="••••••••" required>
+                  {{ register_form.password2.label_tag }}
+                  {{ register_form.password2 }}
+                  {% for error in register_form.password2.errors %}
+                  <span class="text-danger small">{{ error }}</span>
+                  {% endfor %}
                 </div>
+
                 <button type="submit" class="btn cta-btn w-100 rounded-3 text-black">Sign Up</button>
               </form>
             </div>
+
+
           </div>
         </div>
 
         <div class="modal-footer border-0 text-center">
           <small class="text-muted w-100">© 2025 Sound Remover</small>
         </div>
+
       </div>
     </div>
-  </div>
-
-  </div>
   </div>
 
 

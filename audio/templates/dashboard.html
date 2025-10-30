@@ -1,0 +1,81 @@
+{% extends "layout.html" %}
+{% block title %}Dashboard | Sound Remover{% endblock %}
+{% block content %}
+
+<div class="container py-4">
+    <h2 class="fw-bold mb-3">🎧 Welcome, {{ request.user.username }}</h2>
+
+    <!-- Section 1: Profile -->
+    <div class="card bg-dark text-light border-light shadow-sm mb-4" style="border-radius: 1rem;">
+        <div class="card-body d-flex justify-content-between align-items-center">
+            <div>
+                <p class="mb-1"><strong>Username:</strong> {{ request.user.username }}</p>
+                <p class="mb-1"><strong>Tickets:</strong> {{ profile.tickets }}</p>
+                <p class="mb-1"><strong>Name:</strong> {{ profile.user.first_name }} {{ profile.user.last_name }}</p>
+            </div>
+            <div>
+                <a href="{% url 'buy_ticket' %}" class="btn btn-success me-2">💳 ซื้อ Ticket เพิ่ม</a>
+                <a href="{% url 'edit_profile' %}" class="btn btn-warning">✏️ แก้ไขโปรไฟล์</a>
+                <a href="{% url 'change_password' %}" class="btn btn-primary me-2">🔒 เปลี่ยนรหัสผ่าน</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 2: Audio File History -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="fw-bold mb-3">🎵 ประวัติไฟล์เสียงที่อัปโหลด</h5>
+
+            {% if audio_files %}
+            <table class="table table-striped align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ชื่อไฟล์</th>
+                        <th>วันที่อัปโหลด</th>
+                        <th>สถานะ</th>
+                        <th>แท็ก</th>
+                        <th>ดูไฟล์</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for audio in audio_files %}
+                    <tr>
+                        <td>{{ audio.original_file.name|cut:"uploads/originals/" }}</td>
+                        <td>{{ audio.uploaded_at|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            {% if audio.status == "processed" %}
+                            <span class="badge bg-success">Processed</span>
+                            {% elif audio.status == "pending" %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                            {% else %}
+                            <span class="badge bg-danger">Failed</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% for tag in audio.tags.all %}
+                            <span class="badge bg-secondary">{{ tag.name }}</span>
+                            {% empty %}
+                            <span class="text-muted small">ไม่มีแท็ก</span>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% if not request.user.is_staff %}
+                            <a href="{% url 'audio_detail' audio.id %}" class="btn btn-outline-primary btn-sm">View
+                                File</a>
+                            {% else %}
+                            <a href="{% url 'admin_view_audio' profile.user.id audio.id %}"
+                                class="btn btn-outline-primary btn-sm">View File</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p class="text-muted">ยังไม่มีไฟล์เสียงที่ถูกประมวลผล</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

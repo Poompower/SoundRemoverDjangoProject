@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}ซื้อ Ticket เพิ่ม | Sound Remover{% endblock %}
+{% block content %}
+
+<div class="container py-4 text-center">
+
+  <h3 class="fw-bold mb-4">💳 ซื้อ Ticket เพิ่ม</h3>
+
+  <!-- 🔹 QR โอนเงินจาก static -->
+  <div class="mb-4">
+    <h5 class="mb-2">📱 สแกน QR เพื่อชำระเงิน</h5>
+    <img src="{% static 'qrcode.jpg' %}" 
+         alt="QR Code" class="img-fluid rounded shadow" 
+         style="max-width: 250px;">
+    <p class="mt-2 text-muted">* โอนเงินตามจำนวนที่ต้องการ จากนั้นแนบสลิปด้านล่าง *</p>
+  </div>
+
+  <!-- 🔹 ฟอร์มอัปโหลดสลิป -->
+  <div class="card p-4 shadow-sm mx-auto" style="max-width: 500px;">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="mb-3 text-start">
+        <label class="form-label fw-semibold">แนบสลิปการโอน</label>
+        {{ form.slip_image }}
+      </div>
+
+      <div class="mb-3 text-start">
+        <label class="form-label fw-semibold">วันที่และเวลาโอน</label>
+        {{ form.transfer_datetime }}
+      </div>
+
+      <div class="mb-3 text-start">
+        <label class="form-label fw-semibold">จำนวนเงิน (บาท)</label>
+        {{ form.amount }}
+      </div>
+
+      <button type="submit" class="btn btn-success w-100">📤 ส่งสลิป</button>
+      <a href="{% url 'dashboard' %}" class="btn btn-secondary w-100 mt-2">⬅ กลับ</a>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

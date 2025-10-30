@@ -1,0 +1,109 @@
+{% extends "layout.html" %}
+{% block title %}รายละเอียดไฟล์เสียง | Sound Remover{% endblock %}
+{% block content %}
+
+<div class="container py-4">
+  <h3 class="fw-bold mb-3">🎵 {{ audio.original_file.name|cut:"uploads/originals/" }}</h3>
+  <div class="d-flex justify-content-end mb-3">
+    <form method="post" action="{% url 'delete_audio' audio.id %}">
+      {% csrf_token %}
+      {% if perms.audio.delete_audiofile and is_owner%}
+      <button type="submit" class="btn btn-danger">🗑️ Delete</button>
+      {% endif %}
+    </form>
+  </div>
+
+  <p><strong>สถานะ:</strong>
+    {% if audio.status == 'processed' %}
+    <span class="badge bg-success">Success</span>
+    {% elif audio.status == 'pending' %}
+    <span class="badge bg-warning text-dark">Pending</span>
+    {% else %}
+    <span class="badge bg-danger">Failed</span>
+    {% endif %}
+  </p>
+  <p><strong>อัปโหลดเมื่อ:</strong> {{ audio.uploaded_at|date:"d/m/Y H:i" }}</p>
+
+  <!-- 🔊 ฟังไฟล์ต้นฉบับ -->
+  <div class="mt-4">
+    <h5>🎧 ฟังไฟล์ต้นฉบับ</h5>
+    <audio controls class="w-100 mt-2">
+      <source src="{{ audio.original_file.url }}" type="audio/mpeg">
+      เบราว์เซอร์ของคุณไม่รองรับเครื่องเล่นเสียง
+    </audio>
+  </div>
+
+  <!-- 🔊 ฟังไฟล์ผลลัพธ์ -->
+  {% if outputs %}
+  <div class="mt-4">
+    <h5>🎚️ มิกซ์เสียง (เล่นพร้อมกัน)</h5>
+
+    <!-- ปุ่มเล่นพร้อมกัน -->
+    <div class="mb-3">
+      <button id="playAll" class="btn btn-primary me-2">▶️ เล่นพร้อมกัน</button>
+      <button id="pauseAll" class="btn btn-secondary">⏸️ หยุดทั้งหมด</button>
+    </div>
+
+    <!-- Audio players -->
+    <div id="audioPlayers">
+      {% for out in outputs %}
+      <div class="mb-3">
+        <h6>{{ out.stem_type|title }}</h6>
+        <audio id="audio_{{ out.stem_type }}" controls class="w-100 mt-1">
+          <source src="{{ out.file.url }}" type="audio/wav">
+        </audio>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<hr>
+<h5>🏷️ แท็กเพลง</h5>
+<form method="post">
+  {% csrf_token %}
+  <select name="tags" multiple class="form-select mb-3">
+    {% for tag in tags %}
+    <option value="{{ tag.id }}" {% if tag in audio.tags.all %}selected{% endif %}>{{ tag.name }}</option>
+    {% endfor %}
+  </select>
+  {% if perms.audio.change_audiofile and is_owner%}
+  <button class="btn btn-primary">💾 Save Tag</button>
+  {% endif %}
+  {% if not request.user.is_staff %}
+  <a href="{% url 'dashboard' %}" class="btn btn-secondary">⬅ กลับ</a>
+  {% else %}
+  <a href="{% url 'admin_view_history' audio.owner.user.id %}" class="btn btn-secondary">⬅ กลับ</a>
+  {% endif %}
+
+</form>
+</div>
+<script>
+  const playBtn = document.getElementById("playAll");
+  const pauseBtn = document.getElementById("pauseAll");
+  const vocals = document.getElementById("audio_vocals");
+  const accomp = document.getElementById("audio_accompaniment");
+
+  if (vocals && accomp) {
+    // เมื่อกด "เล่นพร้อมกัน"
+    playBtn.addEventListener("click", () => {
+      // sync เวลาให้เท่ากัน
+      const currentTime = Math.max(vocals.currentTime, accomp.currentTime);
+      vocals.currentTime = accomp.currentTime = currentTime;
+      vocals.play();
+      accomp.play();
+    });
+
+    // เมื่อกด "หยุดทั้งหมด"
+    pauseBtn.addEventListener("click", () => {
+      vocals.pause();
+      accomp.pause();
+    });
+
+    // ถ้า track ใดจบ ให้หยุดอีก track ด้วย
+    vocals.addEventListener("ended", () => accomp.pause());
+    accomp.addEventListener("ended", () => vocals.pause());
+  }
+</script>
+{% endblock %}

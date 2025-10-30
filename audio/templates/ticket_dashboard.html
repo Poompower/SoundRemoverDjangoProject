@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% block title %}Ticket Dashboard | Sound Remover{% endblock %}
+{% block content %}
+
+<div class="container py-4">
+  <h3 class="fw-bold mb-4">🎟️ ประวัติการซื้อ Ticket</h3>
+
+  {% if payments %}
+  <table class="table table-striped align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>วันที่ทำรายการโอน</th>
+        <th>จำนวนเงิน (บาท)</th>
+        <th>สถานะ</th>
+        <th>สลิป</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in payments %}
+      <tr>
+        <td>{{ p.transfer_datetime|date:"d/m/Y H:i" }}</td>
+        <td>{{ p.amount }}</td>
+        <td>
+          {% if p.status == "pending" %}
+          <span class="badge bg-warning text-dark">กำลังตรวจสอบ</span>
+          {% elif p.status == "approved" %}
+          <span class="badge bg-success">ยืนยันแล้ว</span>
+          {% else %}
+          <span class="badge bg-danger">ปฏิเสธ</span>
+          {% endif %}
+        </td>
+        <td>
+          <a href="{{ p.slip_image.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+            ดูสลิป
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="text-muted">ยังไม่มีประวัติการซื้อ Ticket</p>
+  {% endif %}
+  
+
+  <a href="{% url 'buy_ticket' %}" class="btn btn-success mt-3">💳 ซื้อ Ticket เพิ่ม</a>
+  <a href="{% url 'dashboard' %}" class="btn btn-secondary mt-3">⬅ กลับหน้าหลัก</a>
+</div>
+
+{% endblock %}

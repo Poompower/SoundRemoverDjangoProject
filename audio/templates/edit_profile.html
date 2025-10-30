@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block title %}Edit Profile | Sound Remover{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h2 class="fw-bold mb-3">✏️ แก้ไขโปรไฟล์</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        {{ form.first_name.label_tag }}
+        {{ form.first_name }}
+        {% for error in form.first_name.errors %}
+        <span class="text-danger small">{{ error }}</span>
+        {% endfor %}
+      </div>
+      <div class="col-md-6 mb-3">
+        {{ form.last_name.label_tag }}
+        {{ form.last_name }}
+        {% for error in form.last_name.errors %}
+        <span class="text-danger small">{{ error }}</span>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="mb-3">
+      {{ form.email.label_tag }}
+      {{ form.email }}
+      {% for error in form.email.errors %}
+      <span class="text-danger small">{{ error }}</span>
+      {% endfor %}
+    </div>
+
+    <div class="mb-3">
+      {{ form.username.label_tag }}
+      {{ form.username }}
+      {% for error in form.username.errors %}
+      <span class="text-danger small">{{ error }}</span>
+      {% endfor %}
+    </div>
+
+    <button type="submit" class="btn btn-success">💾 บันทึกการเปลี่ยนแปลง</button>
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary">⬅ กลับ</a>
+  </form>
+</div>
+{% endblock %}
